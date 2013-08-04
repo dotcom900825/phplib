@@ -16,7 +16,7 @@ require_once ("DebugLog.php");
 class EventPass extends Pass
 {
 
-    /* Pass configuration is bundled in the class */
+    /* Pass configuration is bundled in the class test*/
 
     // relative path to the folder where your certificate and key files are
     public $keyPath;
