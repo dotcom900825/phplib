@@ -40,7 +40,7 @@ class Utils{
     }
 
     # write value to an array by path
-    public static function arrayAccessSetter($data, $path, $value, $force = false, $delimiter = '_'){
+    public static function arrayAccessSetter(&$data, $path, $value, $force = false, $delimiter = '_'){
         if($force){
             Utils::arrayAccessor($data, $path, $value, $delimiter);
         }
