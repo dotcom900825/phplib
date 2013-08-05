@@ -46,6 +46,8 @@ class JsonInterface
     }
 
     public function saveJsonToFile(){
+        DebugLog::WriteLogWithFormat("+++++++save:".print_r($this->jsonContent,true));
+	echo print_r($this->jsonContent,true);
         file_put_contents($this->cardPath, json_encode($this->jsonContent));
     }
 
