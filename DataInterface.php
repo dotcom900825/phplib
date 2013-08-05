@@ -15,8 +15,6 @@ class DataInterface
         "pass.com.ipassstore.ucsdcssa:3" => "/../../ ../Client/TEST_NEW_SAMPLE_TWO/pass",
         "pass.com.ipassstore.dailyFreeAppGame:4" =>
             "/../../../Client/DAILY_APP_GAME_Card/pass",
-        "pass.com.ipassstore.ucsduta:5" =>
-            "/../../../Client/UCSD_UTA_Membership_Card_StorePass/pass",
         "pass.com.ipassstore.ucsduta:6" =>
             "/../../../Client/UCSD_UTA_Membership_Card/pass",
 		"pass.com.ipassstore.tucssa:7" =>
@@ -31,7 +29,6 @@ class DataInterface
         2 => "TEST_NEW_SAMPLE",
         3 => "TEST_NEW_SAMPLE_TWO",
         4 => "DAILY_APP_GAME_Card",
-        5 => "UCSD_UTA_Membership_Card_StorePass",
         6 => "UCSD_UTA_Membership_Card",
 		7 => "TU_CSSA_Membership_Card",
 		8 => "UCSD_CSSA_Membership_Card",
@@ -49,7 +46,6 @@ class DataInterface
         "TEST_NEW_SAMPLE_TWO" => "pass.com.ipassstore.ucsdcssa",
         "UCSD_CSSA_Membership_Card" => "pass.com.ipassstore.ucsdcssa",
         "DAILY_APP_GAME_Card" => "pass.com.ipassstore.dailyFreeAppGame",
-        "UCSD_UTA_Membership_Card_StorePass" => "pass.com.ipassstore.ucsduta",
         "UCSD_UTA_Membership_Card" => "pass.com.ipassstore.ucsduta",
 		"TU_CSSA_Membership_Card" => "pass.com.ipassstore.tucssa",
 		"SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove");
