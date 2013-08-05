@@ -26,18 +26,18 @@ class StorePass extends Pass
     * purpose:       autoconfigures the object and calls the super constructor
     * parameter:     $keyPath, $sourcePath, $keyPassword, $passTypeID, $cardID
     */
-    function __construct($keyPath, $sourcePath, $keyPassword, $passTypeID, $cardID)
+    function __construct($keyPath, $sourcePath, $keyPassword, $passTypeId, $cardId)
     {
 
         DebugLog::WriteLogWithFormat("StorePass::__construct(keyPath:$keyPath,
 								sourcePath:$sourcePath,keyPassword:$keyPassword,
-								passTypeID:$passTypeID,cardID:$cardID)");
+								passTypeID:$passTypeId,cardID:$cardId)");
         $this->keyPath = $keyPath;
         $this->sourcePath = $sourcePath;
 
         $this->keyPassword = $keyPassword;
-        $this->passTypeID = $passTypeID;
-        $this->cardID = $cardID;
+        $this->passTypeID = $passTypeId;
+        $this->cardID = $cardId;
     // get the absolute path for $keyPath
 	  $this->keyPath = realpath($this->keyPath);
 	     

@@ -12,7 +12,7 @@ class DataInterface
         "pass.com.ipassstore.ucsdcssa:1" =>
             "/../../../Client/UCSD_CSSA_Membership_Card/pass",
         "pass.com.ipassstore.ucsdcssa:2" => "/../../../Client/TEST_NEW_SAMPLE/pass",
-        "pass.com.ipassstore.ucsdcssa:3" => "/../../ ../Client/TEST_NEW_SAMPLE_TWO/pass",
+        "pass.com.ipassstore.ucsdcssa:3" => "/../../../Client/TEST_NEW_SAMPLE_TWO/pass",
         "pass.com.ipassstore.dailyFreeAppGame:4" =>
             "/../../../Client/DAILY_APP_GAME_Card/pass",
         "pass.com.ipassstore.ucsduta:6" =>
