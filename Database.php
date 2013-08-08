@@ -1,6 +1,7 @@
 <?php
 
 require_once ("DebugLog.php");
+require_once ("config.php");
 
 /*
 * class name: Database
@@ -9,26 +10,19 @@ require_once ("DebugLog.php");
 */
 class Database extends PDO
 {
-    //database connection details
-    static private $host = "localhost";
-    static private $dbname = "admin_iPassStore";
-    static private $user = "admin_wangfute";
-    static private $pass = "wangfute95536";
-    private static $instance = null;
-
-    // get the singleton connectivity instance
+     // get the singleton connectivity instance
     static function get()
     {
 		DebugLog::WriteLogWithFormat("static Database::get()");
         // check if there is already a instance stored in $instance
-        if (self::$instance != null)
-            return self::$instance;
+        if (configs::$instance != null)
+            return configs::$instance;
 
         // create a new Database instance
         try {
-            self::$instance = new Database("mysql:" . "host=" . self::$host . ";" .
-                "dbname=" . self::$dbname, self::$user, self::$pass);
-            return self::$instance;
+            configs::$instance = new Database("mysql:" . "host=" . configs::$host . ";" .
+                "dbname=" . configs::$dbname, configs::$user, configs::$pass);
+            return configs::$instance;
 
             // check for connection
             echo "Connected to database";
