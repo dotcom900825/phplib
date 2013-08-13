@@ -22,7 +22,11 @@ class DataInterface
 		"pass.com.ipassstore.ucsdcssa:8" =>
             "/../../../Client/UCSD_CSSA_Membership_Card/pass",
 		"pass.com.ipassstore.georgeAtTheCove:9" => 
-			"/../../../Client/SD_Restaurant_Georges_At_The_Cove/pass");
+			"/../../../Client/SD_Restaurant_Georges_At_The_Cove/pass",
+		"pass.com.ipassstore.cssa:10" => 
+			"/../../../Client/UChicago_CSSA_Membership_Card/pass",
+		"pass.com.ipassstore.cssa:11" => 
+			"/../../../Client/UTAustin_CSSA_Membership_Card/pass");
 
     static $folderByCardId = array(
         1 => "UCSD_CSSA_Membership_Card",
@@ -32,14 +36,17 @@ class DataInterface
         6 => "UCSD_UTA_Membership_Card",
 		7 => "TU_CSSA_Membership_Card",
 		8 => "UCSD_CSSA_Membership_Card",
-		9 => "SD_Restaurant_Georges_At_The_Cove");
+		9 => "SD_Restaurant_Georges_At_The_Cove",
+		10 => "UChicago_CSSA_Membership_Card",
+		11 => "UTAustin_CSSA_Membership_Card");
 
     static $cardKeyPasswordDict = array(
         "pass.com.ipassstore.ucsdcssa" => "ucsdcssa95536",
         "pass.com.ipassstore.ucsduta" => "ucsduta95536",
         "pass.com.ipassstore.dailyFreeAppGame" => "dailyFreeAppGame95536",
 		"pass.com.ipassstore.tucssa" => "tucssa95536",
-		"pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536");
+		"pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536",
+		"pass.com.ipassstore.cssa" => "cssa95536");
 
     static $orgIdByFolder = array(
         "TEST_NEW_SAMPLE" => "pass.com.ipassstore.ucsdcssa",
@@ -48,7 +55,9 @@ class DataInterface
         "DAILY_APP_GAME_Card" => "pass.com.ipassstore.dailyFreeAppGame",
         "UCSD_UTA_Membership_Card" => "pass.com.ipassstore.ucsduta",
 		"TU_CSSA_Membership_Card" => "pass.com.ipassstore.tucssa",
-		"SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove");
+		"SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove",
+		"UChicago_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
+		"UTAustin_CSSA_Membership_Card" => "pass.com.ipassstore.cssa");
 
     public static function getFolderByCardId($cardId)
     {
