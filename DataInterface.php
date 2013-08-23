@@ -10,23 +10,23 @@ class DataInterface
 
     static $pathByOrgIdAndCardIdDict = array(
         "pass.com.ipassstore.ucsdcssa:1" =>
-            "/../../../Client/UCSD_CSSA_Membership_Card/pass",
+        "/../../../Client/UCSD_CSSA_Membership_Card/pass",
         "pass.com.ipassstore.ucsdcssa:2" => "/../../../Client/TEST_NEW_SAMPLE/pass",
         "pass.com.ipassstore.ucsdcssa:3" => "/../../../Client/TEST_NEW_SAMPLE_TWO/pass",
         "pass.com.ipassstore.dailyFreeAppGame:4" =>
-            "/../../../Client/DAILY_APP_GAME_Card/pass",
+        "/../../../Client/DAILY_APP_GAME_Card/pass",
         "pass.com.ipassstore.ucsduta:6" =>
-            "/../../../Client/UCSD_UTA_Membership_Card/pass",
-		"pass.com.ipassstore.tucssa:7" =>
-            "/../../../Client/TU_CSSA_Membership_Card/pass",
-		"pass.com.ipassstore.ucsdcssa:8" =>
-            "/../../../Client/UCSD_CSSA_Membership_Card/pass",
-		"pass.com.ipassstore.georgeAtTheCove:9" => 
-			"/../../../Client/SD_Restaurant_Georges_At_The_Cove/pass",
-		"pass.com.ipassstore.cssa:10" => 
-			"/../../../Client/UChicago_CSSA_Membership_Card/pass",
-		"pass.com.ipassstore.cssa:11" => 
-			"/../../../Client/UTAustin_CSSA_Membership_Card/pass");
+        "/../../../Client/UCSD_UTA_Membership_Card/pass",
+        "pass.com.ipassstore.tucssa:7" =>
+        "/../../../Client/TU_CSSA_Membership_Card/pass",
+        "pass.com.ipassstore.ucsdcssa:8" =>
+        "/../../../Client/UCSD_CSSA_Membership_Card/pass",
+        "pass.com.ipassstore.georgeAtTheCove:9" =>
+        "/../../../Client/SD_Restaurant_Georges_At_The_Cove/pass",
+        "pass.com.ipassstore.cssa:10" =>
+        "/../../../Client/UChicago_CSSA_Membership_Card/pass",
+        "pass.com.ipassstore.cssa:11" =>
+        "/../../../Client/UTAustin_CSSA_Membership_Card/pass");
 
     static $folderByCardId = array(
         1 => "UCSD_CSSA_Membership_Card",
@@ -34,19 +34,19 @@ class DataInterface
         3 => "TEST_NEW_SAMPLE_TWO",
         4 => "DAILY_APP_GAME_Card",
         6 => "UCSD_UTA_Membership_Card",
-		7 => "TU_CSSA_Membership_Card",
-		8 => "UCSD_CSSA_Membership_Card",
-		9 => "SD_Restaurant_Georges_At_The_Cove",
-		10 => "UChicago_CSSA_Membership_Card",
-		11 => "UTAustin_CSSA_Membership_Card");
+        7 => "TU_CSSA_Membership_Card",
+        8 => "UCSD_CSSA_Membership_Card",
+        9 => "SD_Restaurant_Georges_At_The_Cove",
+        10 => "UChicago_CSSA_Membership_Card",
+        11 => "UTAustin_CSSA_Membership_Card");
 
     static $cardKeyPasswordDict = array(
         "pass.com.ipassstore.ucsdcssa" => "ucsdcssa95536",
         "pass.com.ipassstore.ucsduta" => "ucsduta95536",
         "pass.com.ipassstore.dailyFreeAppGame" => "dailyFreeAppGame95536",
-		"pass.com.ipassstore.tucssa" => "tucssa95536",
-		"pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536",
-		"pass.com.ipassstore.cssa" => "cssa95536");
+        "pass.com.ipassstore.tucssa" => "tucssa95536",
+        "pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536",
+        "pass.com.ipassstore.cssa" => "cssa95536");
 
     static $orgIdByFolder = array(
         "TEST_NEW_SAMPLE" => "pass.com.ipassstore.ucsdcssa",
@@ -54,10 +54,10 @@ class DataInterface
         "UCSD_CSSA_Membership_Card" => "pass.com.ipassstore.ucsdcssa",
         "DAILY_APP_GAME_Card" => "pass.com.ipassstore.dailyFreeAppGame",
         "UCSD_UTA_Membership_Card" => "pass.com.ipassstore.ucsduta",
-		"TU_CSSA_Membership_Card" => "pass.com.ipassstore.tucssa",
-		"SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove",
-		"UChicago_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
-		"UTAustin_CSSA_Membership_Card" => "pass.com.ipassstore.cssa");
+        "TU_CSSA_Membership_Card" => "pass.com.ipassstore.tucssa",
+        "SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove",
+        "UChicago_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
+        "UTAustin_CSSA_Membership_Card" => "pass.com.ipassstore.cssa");
 
     public static function getFolderByCardId($cardId)
     {
@@ -98,8 +98,7 @@ class DataInterface
             $statement->execute(array($userEmail, $cardId));
 
             $row = $statement->fetch(PDO::FETCH_ASSOC);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             $error = $e->getMessage();
             DebugLog::WriteLogRaw("========in error========");
             DebugLog::WriteLogWithFormat("$error");
@@ -147,8 +146,7 @@ class DataInterface
             if (!$row) {
                 return null;
             }
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             $error = $e->getMessage();
             DebugLog::WriteLogWithFormat("LOG:ERROR In DataInterface::static getCardIdByPassId\r\n" .
                 print_r($error, true));
@@ -237,7 +235,7 @@ class DataInterface
     public static function insertPass($argv)
     {
         DebugLog::WriteLogWithFormat("static DataInterface::insertPass(argv:" . print_r
-            ($argv, true) . ")");
+        ($argv, true) . ")");
 
         // get database connection
         $db = Database::get();
@@ -259,8 +257,7 @@ class DataInterface
             $statement->execute(array($argv[2], $argv[6]));
             $row = $statement->fetch(PDO::FETCH_ASSOC);
             return $row['ID'];
-        }
-        // 4 save the exception error message in $error and return null
+        } // 4 save the exception error message in $error and return null
         catch (PDOException $e) {
             $error = $e->getMessage();
             DebugLog::WriteLogWithFormat("LOG:ERROR In DataInterface::static insertPass\r\n" .
@@ -302,8 +299,7 @@ class DataInterface
             } else {
                 return true;
             }
-        }
-        // 4 save the exception error message in $error and return null
+        } // 4 save the exception error message in $error and return null
         catch (PDOException $e) {
             $error = $e->getMessage();
             DebugLog::WriteLogWithFormat("LOG:ERROR In DataInterface::static login\r\n");
@@ -397,8 +393,8 @@ class DataInterface
         return $apns->updateOneCard($username, $cardId);
     }
 
-
-    public static function updateTimeStamp($cardId){
+    public static function updateTimeStamp($cardId)
+    {
         try {
             // get database connection
             $db = Database::get();
@@ -411,8 +407,7 @@ class DataInterface
             $statement->execute(array($currentTime, $cardId));
 
             $row = $statement->fetch(PDO::FETCH_ASSOC);
-        }
-        catch (PDOException $e) {
+        } catch (PDOException $e) {
             $error = $e->getMessage();
             echo "$error";
         }
@@ -428,6 +423,15 @@ class DataInterface
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         return $row['Type'];
     }
-}
 
-?>
+    public static function getCardDistributionType($cardId)
+    {
+        DebugLog::WriteLogWithFormat("static DataInterface::
+				getCardType(cardId:$cardId)");
+        $db = Database::get();
+        $statement = $db->prepare("SELECT Distribution FROM cards WHERE ID = ?");
+        $statement->execute(array($cardId));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        return $row['Distribution'];
+    }
+}
