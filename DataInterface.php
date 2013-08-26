@@ -12,7 +12,7 @@ class DataInterface
         "pass.com.ipassstore.ucsdcssa:1" =>
         "/../../../Client/UCSD_CSSA_Membership_Card/pass",
         "pass.com.ipassstore.ucsdcssa:2" => "/../../../Client/TEST_NEW_SAMPLE/pass",
-        "pass.com.ipassstore.ucsdcssa:3" => "/../../../Client/TEST_NEW_SAMPLE_TWO/pass",
+        "pass.com.ipassstore.dev:3" => "/../../../Client/TEST_NEW_SAMPLE_TWO/pass",
         "pass.com.ipassstore.dailyFreeAppGame:4" =>
         "/../../../Client/DAILY_APP_GAME_Card/pass",
         "pass.com.ipassstore.ucsduta:6" =>
@@ -46,11 +46,12 @@ class DataInterface
         "pass.com.ipassstore.dailyFreeAppGame" => "dailyFreeAppGame95536",
         "pass.com.ipassstore.tucssa" => "tucssa95536",
         "pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536",
-        "pass.com.ipassstore.cssa" => "cssa95536");
+        "pass.com.ipassstore.cssa" => "cssa95536",
+        "pass.com.ipassstore.dev" => "iPassStoreDev95536");
 
     static $orgIdByFolder = array(
         "TEST_NEW_SAMPLE" => "pass.com.ipassstore.ucsdcssa",
-        "TEST_NEW_SAMPLE_TWO" => "pass.com.ipassstore.ucsdcssa",
+        "TEST_NEW_SAMPLE_TWO" => "pass.com.ipassstore.dev",
         "UCSD_CSSA_Membership_Card" => "pass.com.ipassstore.ucsdcssa",
         "DAILY_APP_GAME_Card" => "pass.com.ipassstore.dailyFreeAppGame",
         "UCSD_UTA_Membership_Card" => "pass.com.ipassstore.ucsduta",
