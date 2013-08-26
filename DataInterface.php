@@ -11,7 +11,7 @@ class DataInterface
     static $pathByOrgIdAndCardIdDict = array(
         "pass.com.ipassstore.ucsdcssa:1" =>
         "/../../../Client/UCSD_CSSA_Membership_Card/pass",
-        "pass.com.ipassstore.ucsdcssa:2" => "/../../../Client/TEST_NEW_SAMPLE/pass",
+        "pass.com.ipassstore.dev:2" => "/../../../Client/TEST_NEW_SAMPLE/pass",
         "pass.com.ipassstore.dev:3" => "/../../../Client/TEST_NEW_SAMPLE_TWO/pass",
         "pass.com.ipassstore.dailyFreeAppGame:4" =>
         "/../../../Client/DAILY_APP_GAME_Card/pass",
@@ -50,7 +50,7 @@ class DataInterface
         "pass.com.ipassstore.dev" => "iPassStoreDev95536");
 
     static $orgIdByFolder = array(
-        "TEST_NEW_SAMPLE" => "pass.com.ipassstore.ucsdcssa",
+        "TEST_NEW_SAMPLE" => "pass.com.ipassstore.dev",
         "TEST_NEW_SAMPLE_TWO" => "pass.com.ipassstore.dev",
         "UCSD_CSSA_Membership_Card" => "pass.com.ipassstore.ucsdcssa",
         "DAILY_APP_GAME_Card" => "pass.com.ipassstore.dailyFreeAppGame",
