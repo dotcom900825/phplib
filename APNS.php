@@ -10,6 +10,7 @@
 
 require_once ("Database.php");
 require_once ("DebugLog.php");
+require_once ("config.php");
 
 class APNS
 {
@@ -19,15 +20,17 @@ class APNS
 
     function __construct($keyPath, $keyPassword)
     {
-		DebugLog::WriteLogWithFormat("APNS::__construct(keyPath:$keyPath,keyPassword:$keyPassword)");
+        DebugLog::WriteLogWithFormat("APNS::__construct(keyPath:$keyPath,keyPassword:$keyPassword)");
         $this->keyPath = $keyPath;
         $this->keyPassword = $keyPassword;
+        $this->emailFrom = configs::$errorReportEmailFrom;
+        $this->emailTo = configs::$errorReportEmail;
     }
 
     // update all passes under one single card
     function updateOneCard($username, $cardId)
     {
-		DebugLog::WriteLogWithFormat("APNS::updateOneCard(username:$username,cardId:$cardId)");
+        DebugLog::WriteLogWithFormat("APNS::updateOneCard(username:$username,cardId:$cardId)");
         $db = Database::get();
         $statement = $db->prepare("SELECT PushToken
                                     FROM devices,passes,DeviceVSPass
@@ -42,7 +45,7 @@ class APNS
     //update all registered devices
     function updateAllPasses()
     {
-		DebugLog::WriteLogWithFormat("APNS::updateAllPasses()");
+        DebugLog::WriteLogWithFormat("APNS::updateAllPasses()");
         $db = Database::get();
         $statement = $db->prepare("SELECT PushToken FROM devices");
         $statement->execute();
@@ -54,7 +57,7 @@ class APNS
     //update all devices which have the given pass installed
     function updateForPassWithSerialNr($passId)
     {
-		DebugLog::WriteLogWithFormat("APNS::updateForPassWithSerialNr(passId:$passId)");
+        DebugLog::WriteLogWithFormat("APNS::updateForPassWithSerialNr(passId:$passId)");
         $db = Database::get();
         $statement = $db->prepare("SELECT PushToken FROM devices WHERE PassID=?");
         $statement->execute(array($passId));
@@ -84,10 +87,8 @@ class APNS
         DebugLog::WriteLogRaw("Point 3\r\n");
         if (!$fp) { //error handling
             DebugLog::WriteLogRaw("Point 4\r\n");
-            $emailFrom = "noreply@ipassstore.com";
-            $emailTo = "admin@ipassstore.com";
-            mail($emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
-                print_r($err, true) . print_r($errstr, true), "From: " . $emailFrom);
+            mail($this->emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
+                print_r($err, true) . print_r($errstr, true), "From: " . ($this->emailFrom));
             return;
         }
         DebugLog::WriteLogRaw("Point 5\r\n");
