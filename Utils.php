@@ -38,6 +38,17 @@ class Utils
         return !strncmp($target, $prefix, strlen($prefix));
     }
 
+    # test if target string ends with the suffix string
+    public static function endsWith($target, $suffix)
+    {
+        $length = strlen($suffix);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($target, -$length) === $suffix);
+    }
+
     # read value from an array by path
     public static function arrayAccessGetter($data, $path, $delimiter = '_')
     {
