@@ -64,7 +64,7 @@ class GenericPass extends Pass
         parent::__construct($this->sourcePath);
         $debugContent = $this->content;
         DebugLog::WriteLogWithFormat("in construct of generic pass " . print_r($debugContent,
-            ture));
+            true));
     }
 
     /*

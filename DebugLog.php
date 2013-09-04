@@ -11,7 +11,7 @@ class DebugLog
     public static function WriteLogWithFormat($content)
     {
         $date = date('m/d/Y h:i:s a', time());
-        DebugLog::WriteLogRaw($current . "==================$date====================\r\n" .
+        DebugLog::WriteLogRaw("==================$date====================\r\n" .
             "$content \r\n" . "======================================================\r\n");
     }
 }

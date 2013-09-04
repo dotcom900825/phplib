@@ -70,7 +70,7 @@ class EventPass extends Pass
         parent::__construct($this->sourcePath);
         $debugContent = $this->content;
         DebugLog::WriteLogWithFormat("in construct of eventpass " . print_r($debugContent,
-            ture));
+            true));
     }
 
     /*

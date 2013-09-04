@@ -24,6 +24,7 @@ function sendFileToEmailWithTitleAndMessageAmazonSES($to, $subject, $message, $f
         $errorSubject = "SesClient Error Report";
         // prepare email body text
         $body = $e1->getMessage();
+        DebugLog::WriteLogWithFormat("Ses Email Debug:".$errorSubject.$body);
 
         // send email
         mail($emailTo, $errorSubject, $body, "From: <$emailFrom>");

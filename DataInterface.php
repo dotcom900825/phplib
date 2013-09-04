@@ -83,7 +83,7 @@ class DataInterface
     * function name: ifRegistered($userEmail, $cardId)
     * purpose:       check whether an email is already registered
     * parameter:     $userEmail, $cardId
-    * return:        ture if registered, false if not
+    * return:        true if registered, false if not
     */
     public static function ifRegistered($userEmail, $cardId)
     {
