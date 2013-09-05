@@ -21,7 +21,8 @@ class Database extends PDO
             // \PDO::ATTR_ERRMODE enables exceptions for errors.  This is optional but can be handy.
             // \PDO::ATTR_PERSISTENT disables persistent connections, which can cause concurrency issues in certain cases.  See "Gotchas".
             // \PDO::MYSQL_ATTR_INIT_COMMAND alerts the connection that we'll be passing UTF-8 data.  This may not be required depending on your configuration, but it'll save you headaches down the road if you're trying to store Unicode strings in your database.  See "Gotchas".
-            $conn = new \PDO(   'mysql:host=localhost;dbname='.configs::$productionDbname,
+            $conn = new \PDO(   'mysql:host='.configs::$productionHost
+                .';dbname='.configs::$productionDbname,
                 configs::$productionUser,
                 configs::$productionPass,
                 array(
