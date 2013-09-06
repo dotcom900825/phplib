@@ -34,7 +34,8 @@ class Database extends PDO
             return $conn;
         }
         catch (PDOException $e) {
-            echo $e->getMessage();
+            mail(configs::$errorReportEmail, "PDO Exception", "Log message on " . date("Y-m-d H:i:s") . "\n" .
+                $e->getMessage(), "From: " . (configs::$errorReportEmailFrom));
             return null;
         }
     }
