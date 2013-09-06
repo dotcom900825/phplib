@@ -24,12 +24,7 @@ class Database extends PDO
             $conn = new \PDO(   'mysql:host='.configs::$productionHost
                 .';dbname='.configs::$productionDbname,
                 configs::$productionUser,
-                configs::$productionPass,
-                array(
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_PERSISTENT => false,
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => 'set names utf8'
-                )
+                configs::$productionPass
             );
             return $conn;
         }
