@@ -5,6 +5,7 @@
 * purpose:    handle dynamic generation of passes
 */
 
+//Description: too many use of global variables
 class Pass
 {
     // path to the pass-building temporary folder
@@ -24,6 +25,7 @@ class Pass
     * purpose:       ctor to make a new Pass object from a source folder
     * parameter:     $path (source folder)
     */
+    //TODO: maybe this should go to a pass file operation class?
     function __construct($path)
     {
         DebugLog::WriteLogWithFormat("Pass::__construct(path:$path)");
@@ -32,6 +34,9 @@ class Pass
 
         // generate a unique ID for each temp folder, so the system can handle
         // multiple pass generations at the same time
+        
+        // TODO: keep this, this is good. By using tmp folders, a great amount 
+        // of duplicate file can be saved 
         $this->ID = uniqid();
 
         // sys_get_temp_dir returns the path of the SYSTEM temp folder,
@@ -58,6 +63,7 @@ class Pass
     * parameter:     $path
     * return:        void
     */
+    //TODO: some file util class would be a better place for this
     private function copySourceFolderFilesToWorkFolder($path)
     {
         DebugLog::WriteLogWithFormat("Pass::
@@ -92,6 +98,7 @@ class Pass
     * parameter:     $jsonFilePath
     * return:        void
     */
+    //TODO: using return value is much better than global variabl
     function readPassFromJSONFile($jsonFilePath)
     {
         DebugLog::WriteLogWithFormat("Pass::readPassFromJSONFile(jsonFilePath:$jsonFilePath)");
@@ -107,6 +114,7 @@ class Pass
     * parameter:     none
     * return:        void
     */
+    //TODO: use parameter is much better than using global variabl
     function writePassJSONFile()
     {
         DebugLog::WriteLogWithFormat("Pass::writePassJSONFile()");
@@ -120,6 +128,8 @@ class Pass
     * parameter:     none
     * return:        void
     */
+    //Description: this method generate a json manifest that has hash of all the 
+    //files
     function writeRecursiveManifest()
     {
         DebugLog::WriteLogWithFormat("Pass::writeRecursiveManifest()");
@@ -173,6 +183,8 @@ class Pass
             die("Save the pass certificate key as
 	         $keyPath/passkey.pem");
 
+        //TODO: investiage, can python do openssl signature? or can python call 
+        //shell script?
         // use shell_exec to generate signature
         $output = shell_exec("openssl smime -binary -sign" . " -certfile '" . $keyPath .
             "/WWDR.pem'" . " -signer '" . $keyPath . "/passcertificate.pem'" . " -inkey '" .
