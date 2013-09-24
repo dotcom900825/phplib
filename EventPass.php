@@ -56,6 +56,11 @@ class EventPass extends Pass
         dirname()  - returns the parent folder path when given a path to a file            
         realpath() - converts the path again to an absolute path
         */
+        if(!DataInterface::cardExist($passTypeId, $cardId)){
+            $httpProtocol = (isset($_SERVER['SERVER_PROTOCOL']))?$_SERVER['SERVER_PROTOCOL']:"HTTP/1.0";
+            header("$httpProtocol 404 Not Found", true);
+            exit();
+        }
         $tmpKeyPath = DataInterface::getPathByOrgIdAndCardId($passTypeId, $cardId);
         $tmpKeyPath = substr($tmpKeyPath, 9);
 		DebugLog::WriteLogWithFormat("Eventpass keypath: $tmpKeyPath");
