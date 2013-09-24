@@ -27,7 +27,7 @@ class DataInterface
         "/../../../Client/UChicago_CSSA_Membership_Card/pass",
         "pass.com.ipassstore.cssa:11" =>
         "/../../../Client/UTAustin_CSSA_Membership_Card/pass",
-		"pass.com.ipassstore.cssa:12" =>
+        "pass.com.ipassstore.cssa:12" =>
         "/../../../Client/UM_CSSA_Membership_Card/pass");
 
     static $folderByCardId = array(
@@ -41,7 +41,7 @@ class DataInterface
         9 => "SD_Restaurant_Georges_At_The_Cove",
         10 => "UChicago_CSSA_Membership_Card",
         11 => "UTAustin_CSSA_Membership_Card",
-		12 => "UM_CSSA_Membership_Card");
+        12 => "UM_CSSA_Membership_Card");
 
     static $cardKeyPasswordDict = array(
         "pass.com.ipassstore.ucsdcssa" => "ucsdcssa95536",
@@ -62,7 +62,7 @@ class DataInterface
         "SD_Restaurant_Georges_At_The_Cove" => "pass.com.ipassstore.georgeAtTheCove",
         "UChicago_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
         "UTAustin_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
-		"UM_CSSA_Membership_Card" => "pass.com.ipassstore.cssa");
+        "UM_CSSA_Membership_Card" => "pass.com.ipassstore.cssa");
 
     public static function getFolderByCardId($cardId)
     {
@@ -81,6 +81,11 @@ class DataInterface
         DebugLog::WriteLogWithFormat("static DataInterface::getPathByOrgIdAndCardId(
 										orgId:$orgId,cardId:$cardId)");
         return DataInterface::$pathByOrgIdAndCardIdDict[$orgId . ":" . "$cardId"];
+    }
+
+    public static function cardExist($orgId, $cardId)
+    {
+        return in_array($orgId . ":" . "$cardId", DataInterface::$pathByOrgIdAndCardIdDict);
     }
 
     /*
