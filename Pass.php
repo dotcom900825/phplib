@@ -238,7 +238,7 @@ class Pass
     */
     function cleanup()
     {
-        DebugLog::WriteLogWithFormat("Pass::cleanup()");
+        DebugLog::WriteLogWithFormat("Pass::cleanup()".$this->workFolder." end");
         //recurse over contents and delete files
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->
             workFolder), RecursiveIteratorIterator::CHILD_FIRST); // Bottom -> Top
