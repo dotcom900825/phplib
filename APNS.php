@@ -68,9 +68,11 @@ class APNS
     private function sendPushesToResultSet(PDOStatement $stmt)
     {
         DebugLog::WriteLogWithFormat("APNS::sendPushesToResultSet((PDOStatement)stmt)");
+        $numOfDevices = $stmt->rowCount();
         //check if there are any results
-        if ($stmt->rowCount() == 0)
+        if ($numOfDevices == 0)
             return;
+        DebugLog::WriteLogWithFormat("Will be pushing to $numOfDevices devices.");
         DebugLog::WriteLogRaw("Point 1\r\n");
         $kp = $this->keyPath;
         $kpa = $this->keyPassword;
@@ -95,8 +97,10 @@ class APNS
         //create an empty push
         $emptyPush = json_encode(new ArrayObject());
         DebugLog::WriteLogRaw("This is the first debug point!\r\n");
+        $socketWriteCount = 0;
         //send it to all devices found
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $socketWriteCount++;
             //write the push message to the apns socket connection
             $msg = chr(0) . //1
                 pack("n", 32) . pack('H*', $row['PushToken']) . //2
@@ -104,7 +108,7 @@ class APNS
                 $emptyPush; //4
             fwrite($fp, $msg);
         }
-
+        DebugLog::WriteLogWithFormat("Already wrote push to $socketWriteCount devices");
         //close the apns connection
         fclose($fp);
         DebugLog::WriteLogWithFormat("This is the last debug point!");
