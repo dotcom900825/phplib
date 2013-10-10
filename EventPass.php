@@ -73,9 +73,9 @@ class EventPass extends Pass
 
         // call the super ctor and pass in the path to the pass source files
         parent::__construct($this->sourcePath);
-        $debugContent = $this->content;
-        DebugLog::WriteLogWithFormat("in construct of eventpass " . print_r($debugContent,
-            true));
+        //$debugContent = $this->content;
+        //DebugLog::WriteLogWithFormat("in construct of eventpass " . print_r($debugContent,
+          //  true));
     }
 
     /*

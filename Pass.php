@@ -289,8 +289,8 @@ class Pass
     {
         DebugLog::WriteLogWithFormat("Pass::outputPassBundleAsWebDownload()");
 //echo "test!";
-        $debugContent = $this->content;
-        DebugLog::WriteLogWithFormat("- debugContent:".print_r($debugContent,true));
+        //$debugContent = $this->content;
+        //DebugLog::WriteLogWithFormat("- debugContent:".print_r($debugContent,true));
         // inform safari this is a pass file, open it in Passbook
         header("Content-Type: application/vnd.apple.pkpass");
 
