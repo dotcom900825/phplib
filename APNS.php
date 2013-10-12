@@ -72,53 +72,51 @@ class APNS
         //check if there are any results
         if ($numOfDevices == 0)
             return;
-        DebugLog::WriteLogWithFormat("Will be pushing to $numOfDevices devices.");
-        DebugLog::WriteLogRaw("Point 1\r\n");
-        $kp = $this->keyPath;
-        $kpa = $this->keyPassword;
-        DebugLog::WriteLogRaw("$kp $kpa\r\n");
-        //open connection to apns
-        $ctx = stream_context_create();
-        stream_context_set_option($ctx, 'ssl', 'local_cert', $this->keyPath .
-            "/passcertbundle.pem");
-
-        stream_context_set_option($ctx, 'ssl', 'passphrase', $this->keyPassword);
-        DebugLog::WriteLogRaw("Point 2\r\n");
-        $fp = stream_socket_client($this->apnsHost, $err, $errstr, 15,
-            STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
-        DebugLog::WriteLogRaw("Point 3\r\n");
-        if (!$fp) { //error handling
-            DebugLog::WriteLogRaw("Point 4\r\n");
-            mail($this->emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
-                print_r($err, true) . print_r($errstr, true), "From: " . ($this->emailFrom));
-            return;
-        }
-        DebugLog::WriteLogRaw("Point 5\r\n");
-        //create an empty push
-        $emptyPush = json_encode(new ArrayObject());
-        DebugLog::WriteLogRaw("This is the first debug point!\r\n");
-
-        $dbugFile = dirname(__file__) . "/sent_devices.log";
-        file_put_contents($dbugFile ,"\n\n\n\n================One push=================\n" , FILE_APPEND | LOCK_EX);
         $socketWriteCount = 0;
-        //send it to all devices found
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            if($row['device_type'] == "bad"){
-                continue;
+        while (true) {
+            //open connection to apns
+            $ctx = stream_context_create();
+            stream_context_set_option($ctx, 'ssl', 'local_cert', $this->keyPath .
+                "/passcertbundle.pem");
+            stream_context_set_option($ctx, 'ssl', 'passphrase', $this->keyPassword);
+            $fp = stream_socket_client($this->apnsHost, $err, $errstr, 15,
+                STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+            if (!$fp) { //error handling
+                mail($this->emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
+                    print_r($err, true) . print_r($errstr, true), "From: " . ($this->emailFrom));
+                return;
             }
-            $socketWriteCount++;
-            file_put_contents($dbugFile ,"$socketWriteCount\t\t".$row['ID']." : ".$row['PushToken']."\n" , FILE_APPEND | LOCK_EX);
-            //write the push message to the apns socket connection
-            $msg = chr(0) . //1
-                pack("n", 32) . pack('H*', $row['PushToken']) . //2
-                pack("n", strlen($emptyPush)) . //3
-                $emptyPush; //4
-            fwrite($fp, $msg);
+
+            //create an empty push
+            $emptyPush = json_encode(new ArrayObject());
+
+            $dbugFile = dirname(__file__) . "/sent_devices.log";
+            file_put_contents($dbugFile, "\n\n\n\n================One push=================\n", FILE_APPEND | LOCK_EX);
+            $flag = false;
+            //send it to all devices found
+            for ($i = 0; $i <= 30; $i++) {
+                if (!($row = $stmt->fetch(PDO::FETCH_ASSOC))) {
+                    $flag = true;
+                    break;
+                }
+                if ($row['device_type'] == "bad") {
+                    continue;
+                }
+                $socketWriteCount++;
+                file_put_contents($dbugFile, "$socketWriteCount\t\t" . $row['ID'] . " : " . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
+                //write the push message to the apns socket connection
+                $msg = chr(0) . //1
+                    pack("n", 32) . pack('H*', $row['PushToken']) . //2
+                    pack("n", strlen($emptyPush)) . //3
+                    $emptyPush; //4
+                fwrite($fp, $msg);
+                //close the apns connection
+            }
+            fclose($fp);
+            if($flag == true){
+                break;
+            }
         }
-        DebugLog::WriteLogWithFormat("Already wrote push to $socketWriteCount devices");
-        //close the apns connection
-        fclose($fp);
-        DebugLog::WriteLogWithFormat("This is the last debug point!");
     }
 }
 
