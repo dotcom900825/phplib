@@ -32,7 +32,7 @@ class APNS
     {
         DebugLog::WriteLogWithFormat("APNS::updateOneCard(username:$username,cardId:$cardId)");
         $db = Database::get();
-        $statement = $db->prepare("SELECT PushToken, devices.ID
+        $statement = $db->prepare("SELECT PushToken, devices.ID, devices.device_type
                                     FROM devices,passes,DeviceVSPass
                                     WHERE   DeviceVSPass.Device = devices.ID
                                             AND DeviceVSPass.Pass = passes.ID
@@ -103,6 +103,9 @@ class APNS
         $socketWriteCount = 0;
         //send it to all devices found
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if($row['device_type'] == "bad"){
+                continue;
+            }
             $socketWriteCount++;
             file_put_contents($dbugFile ,"$socketWriteCount\t\t".$row['ID']." : ".$row['PushToken']."\n" , FILE_APPEND | LOCK_EX);
             //write the push message to the apns socket connection
