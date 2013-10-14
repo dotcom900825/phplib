@@ -462,4 +462,12 @@ class DataInterface
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         return $row['Distribution'];
     }
+
+    public static function getDevicesCount($passId){
+        $db = Database::get();
+        $statement = $db->prepare("SELECT count(ID) as num FROM DeviceVSPass WHERE Pass = ?");
+        $statement->execute(array($passId));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        return $row['num'];
+    }
 }
