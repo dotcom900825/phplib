@@ -105,10 +105,29 @@ class APNS
                 "ERROR Response Command:" . $error_response['command'] .
                     "\nIdentifier:" . $error_response['identifier'] .
                     "\nStatus:" . $error_response['status_code'] . "\n"
-            , FILE_APPEND | LOCK_EX);
+                , FILE_APPEND | LOCK_EX);
             return true;
         }
         return false;
+    }
+
+    private function establishSSLConnection()
+    {
+        //open connection to apns
+        $ctx = stream_context_create();
+        stream_context_set_option($ctx, 'ssl', 'local_cert', $this->keyPath .
+            "/passcertbundle.pem");
+        stream_context_set_option($ctx, 'ssl', 'passphrase', $this->keyPassword);
+        $fp = stream_socket_client($this->apnsHost, $err, $errstr, 60,
+            STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
+        if (!$fp) { //error handling
+            mail($this->emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
+                print_r($err, true) . print_r($errstr, true), "From: " . ($this->emailFrom));
+            return null;
+        } else {
+            stream_set_blocking($fp, 0);
+            return $fp;
+        }
     }
 
     //send push notifications to all devices in the result set
@@ -122,29 +141,18 @@ class APNS
 
         $date = date('m/d/Y h:i:s a', time());
         $dbugFile = dirname(__file__) . "/sent_devices.log";
-        file_put_contents($dbugFile, 
+        file_put_contents($dbugFile,
             "\n\n\n\n================One push@$date=================\n", FILE_APPEND | LOCK_EX);
+
+        $fp = $this->establishSSLConnection();
 
         $amountOfDevices = $stmt->rowCount();
         $roundCounter = 0;
         $roundSize = 20;
-        for ($i = 0; $i < ceil($amountOfDevices/$roundSize); $i++) {
-            //open connection to apns
-            $ctx = stream_context_create();
-            stream_context_set_option($ctx, 'ssl', 'local_cert', $this->keyPath .
-                "/passcertbundle.pem");
-            stream_context_set_option($ctx, 'ssl', 'passphrase', $this->keyPassword);
-            $fp = stream_socket_client($this->apnsHost, $err, $errstr, 60,
-                STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT, $ctx);
-            if (!$fp) { //error handling
-                mail($this->emailTo, "APNS Log", "Log message on " . date("Y-m-d H:i:s") . "\n" .
-                    print_r($err, true) . print_r($errstr, true), "From: " . ($this->emailFrom));
-                return;
-            }
-            stream_set_blocking ($fp, 0);
+        for ($i = 0; $i < ceil($amountOfDevices / $roundSize); $i++) {
 
             //create an empty push
-            $emptyPush = json_encode(new ArrayObject());
+            $emptyPush = json_encode(array());
 
             file_put_contents($dbugFile, "Round $roundCounter:\n", FILE_APPEND | LOCK_EX);
             $roundCounter++;
@@ -152,7 +160,12 @@ class APNS
             //send it to all devices found
             for ($j = 0; $j < $roundSize; $j++) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if(!$row){
+                    br
+                }
                 if ($row['device_type'] == "android") {
+                    file_put_contents($dbugFile, "$j(android)\t\t" . $row['ID'] . " : "
+                        . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
                     continue;
                 }
                 file_put_contents($dbugFile, "$j\t\t" . $row['ID'] . " : " . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
@@ -162,15 +175,15 @@ class APNS
 
                 $this->checkAppleErrorResponse($fp);
             }
-            usleep(500000);
-            $this->checkAppleErrorResponse($fp);
             file_put_contents($dbugFile, "\n", FILE_APPEND | LOCK_EX);
-
-            //close the apns connection
-            fclose($fp);
         }
-    }
 
+        usleep(500000);
+        $this->checkAppleErrorResponse($fp);
+
+        //close the apns connection
+        fclose($fp);
+    }
 
 
 }
