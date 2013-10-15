@@ -161,7 +161,7 @@ class APNS
             for ($j = 0; $j < $roundSize; $j++) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if(!$row){
-                    br
+                    break;
                 }
                 if ($row['device_type'] == "android") {
                     file_put_contents($dbugFile, "$j(android)\t\t" . $row['ID'] . " : "
