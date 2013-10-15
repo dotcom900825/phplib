@@ -160,15 +160,14 @@ class APNS
             //send it to all devices found
             for ($j = 0; $j < $roundSize; $j++) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-                if(!$row){
+                if (!$row) {
                     break;
                 }
+                file_put_contents($dbugFile, $row['device_type'] . "\t" . "$j\t\t" .
+                    $row['ID'] . " : " . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
                 if ($row['device_type'] == "android") {
-                    file_put_contents($dbugFile, "$j(android)\t\t" . $row['ID'] . " : "
-                        . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
                     continue;
                 }
-                file_put_contents($dbugFile, "$j\t\t" . $row['ID'] . " : " . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
                 //write the push message to the apns socket connection
                 $msg = chr(0) . pack("n", 32) . pack('H*', $row['PushToken']) . pack("n", strlen($emptyPush)) . $emptyPush; //4
                 fwrite($fp, $msg);
