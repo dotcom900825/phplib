@@ -100,7 +100,7 @@ class APNS
             } else {
                 $error_response['status_code'] = $error_response['status_code'] . '-Not listed';
             }
-            $dbugFile = dirname(__file__) . "/sent_devices.log";
+            $dbugFile = dirname(__file__) . "/sent_devices.log.error";
             file_put_contents($dbugFile,
                 "ERROR Response Command:" . $error_response['command'] .
                     "\nIdentifier:" . $error_response['identifier'] .
@@ -144,46 +144,84 @@ class APNS
         file_put_contents($dbugFile,
             "\n\n\n\n================One push@$date=================\n", FILE_APPEND | LOCK_EX);
 
-        $fp = $this->establishSSLConnection();
-
-        $amountOfDevices = $stmt->rowCount();
         $roundCounter = 0;
-        $roundSize = 20;
-        for ($i = 0; $i < ceil($amountOfDevices / $roundSize); $i++) {
-
-            //create an empty push
-            $emptyPush = json_encode(array());
-
-            file_put_contents($dbugFile, "Round $roundCounter:\n", FILE_APPEND | LOCK_EX);
-            $roundCounter++;
-
-            //send it to all devices found
-            for ($j = 0; $j < $roundSize; $j++) {
+        $roundSize = 30;
+        $batchRetryTimes = 1;
+        for ($i = 0; $i < ceil($numOfDevices / $roundSize); $i++) {
+            $devicesToPush = array();
+            for ($k = 0; $k < $roundSize; $k++) {
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$row) {
                     break;
                 }
-                file_put_contents($dbugFile, $row['device_type'] . "\t" . "$j\t\t" .
-                    $row['ID'] . " : " . $row['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
-                if ($row['device_type'] == "android") {
-                    continue;
-                }
-                //write the push message to the apns socket connection
-                $msg = chr(0) . pack("n", 32) . pack('H*', $row['PushToken']) . pack("n", strlen($emptyPush)) . $emptyPush; //4
-                fwrite($fp, $msg);
+                $devicesToPush[$k] = $row;
+            }
 
-                $this->checkAppleErrorResponse($fp);
+            file_put_contents($dbugFile, "--------- Round $roundCounter:\n", FILE_APPEND | LOCK_EX);
+            $roundCounter++;
+
+            //send it to all devices found
+            $batchStatus = true;
+            for ($t = 0; $t < $batchRetryTimes; $t++) {
+                $fp = $this->establishSSLConnection();
+                $batchStatus = true;
+                //create an empty push
+                $emptyPush = json_encode(array());
+                foreach ($devicesToPush as $oneDevice) {
+                    if ($oneDevice['device_type'] != "android") {
+                        $msg = chr(0) . pack("n", 32) . pack('H*', $oneDevice['PushToken'])
+                            . pack("n", strlen($emptyPush)) . $emptyPush; //4
+
+                        file_put_contents($dbugFile, $oneDevice['device_type'] . "\t" .
+                            $oneDevice['ID'] . " : " . $oneDevice['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
+
+                        //write the push message to the apns socket connection
+                        $wroteBytes = fwrite($fp, $msg);
+                        if ($wroteBytes != strlen($msg)) {
+                            $batchStatus = false;
+                            file_put_contents($dbugFile, "========= retry batch ========\n", FILE_APPEND | LOCK_EX);
+                            break;
+                        }
+                    }
+                }
+                fclose($fp);
+                if ($batchStatus) {
+                    break;
+                }
+            }
+            if (!$batchStatus) {
+                file_put_contents($dbugFile, "========= batch failed! ========\n", FILE_APPEND | LOCK_EX);
             }
             file_put_contents($dbugFile, "\n", FILE_APPEND | LOCK_EX);
+            usleep(1000000);
         }
-
-        usleep(500000);
-        $this->checkAppleErrorResponse($fp);
-
-        //close the apns connection
-        fclose($fp);
     }
 
+    function send_feedback_request()
+    {
+        //connect to the APNS feedback servers
+        //make sure you're using the right dev/production server & cert combo!
+        $stream_context = stream_context_create();
+        stream_context_set_option($stream_context, 'ssl', 'local_cert', $this->keyPath .
+            "/passcertbundle.pem");
+        $apns = stream_socket_client('ssl://feedback.push.apple.com:2196',
+            $errcode, $errstr, 60, STREAM_CLIENT_CONNECT, $stream_context);
+        if (!$apns) {
+            echo "ERROR $errcode: $errstr\n";
+            return null;
+        }
+
+        $feedback_tokens = array();
+        //and read the data on the connection:
+        while (!feof($apns)) {
+            $data = fread($apns, 38);
+            if (strlen($data)) {
+                $feedback_tokens[] = unpack("N1timestamp/n1length/H*devtoken", $data);
+            }
+        }
+        fclose($apns);
+        return $feedback_tokens;
+    }
 
 }
 
