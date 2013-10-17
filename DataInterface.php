@@ -48,7 +48,7 @@ class DataInterface
         10 => "UChicago_CSSA_Membership_Card",
         11 => "UTAustin_CSSA_Membership_Card",
         12 => "UM_CSSA_Membership_Card",
-		13 => "UCSD_Triton_Pass",
+        13 => "UCSD_Triton_Pass",
         14 => "SDSU_Aztec_Pass",
         15 => "UCSD_Triton_Pass_New");
 
@@ -60,7 +60,7 @@ class DataInterface
         "pass.com.ipassstore.georgeAtTheCove" => "georgeAtTheCove95536",
         "pass.com.ipassstore.cssa" => "cssa95536",
         "pass.com.ipassstore.dev" => "iPassStoreDev95536",
-		"pass.com.ipassstore.ucsdTritonPass" => "ucsdTritonPass95536",
+        "pass.com.ipassstore.ucsdTritonPass" => "ucsdTritonPass95536",
         "pass.com.ipassstore.sdsuAztecPass" => "sdsuAztecPass95536",
         "pass.com.ipassstore.ucsdTritonPassNew" => "ucsdTritonPassNew95536");
 
@@ -75,7 +75,7 @@ class DataInterface
         "UChicago_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
         "UTAustin_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
         "UM_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
-		"UCSD_Triton_Pass" => "pass.com.ipassstore.ucsdTritonPass",
+        "UCSD_Triton_Pass" => "pass.com.ipassstore.ucsdTritonPass",
         "SDSU_Aztec_Pass" => "pass.com.ipassstore.sdsuAztecPass",
         "UCSD_Triton_Pass_New" => "pass.com.ipassstore.ucsdTritonPassNew");
 
@@ -408,9 +408,9 @@ class DataInterface
         DataInterface::updateTimeStamp($cardId);
 
         $orgTypeId = DataInterface::getPassTypeIdByUsername($username);
-        DebugLog::WriteLogWithFormat("****TMP debug: ".print_r(DataInterface::$pathByOrgIdAndCardIdDict,true));
-		DebugLog::WriteLogWithFormat("$orgTypeId" . ":" . "$cardId");
-		DebugLog::WriteLogWithFormat("****TMP debug: ".DataInterface::$pathByOrgIdAndCardIdDict["$orgTypeId" . ":" . "$cardId"]);
+//      DebugLog::WriteLogWithFormat("****TMP debug: ".print_r(DataInterface::$pathByOrgIdAndCardIdDict,true));
+//		DebugLog::WriteLogWithFormat("$orgTypeId" . ":" . "$cardId");
+//		DebugLog::WriteLogWithFormat("****TMP debug: ".DataInterface::$pathByOrgIdAndCardIdDict["$orgTypeId" . ":" . "$cardId"]);
         $keyPathRelative = DataInterface::$pathByOrgIdAndCardIdDict[$orgTypeId . ":" . "$cardId"];
         $pathTmp = explode('/', $keyPathRelative);
         $pathFolder = $pathTmp[5];
@@ -463,7 +463,8 @@ class DataInterface
         return $row['Distribution'];
     }
 
-    public static function getDevicesCount($passId){
+    public static function getDevicesCount($passId)
+    {
         $db = Database::get();
         $statement = $db->prepare("SELECT count(ID) as num FROM DeviceVSPass WHERE Pass = ?");
         $statement->execute(array($passId));
