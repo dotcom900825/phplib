@@ -166,7 +166,7 @@ class APNS
                 $fp = $this->establishSSLConnection();
                 $batchStatus = true;
                 //create an empty push
-                $emptyPush = json_encode(array());
+                $emptyPush = json_encode(new ArrayObject());
                 foreach ($devicesToPush as $oneDevice) {
                     if ($oneDevice['device_type'] != "android") {
                         $msg = chr(0) . pack("n", 32) . pack('H*', $oneDevice['PushToken'])
