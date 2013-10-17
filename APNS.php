@@ -177,13 +177,19 @@ class APNS
 
                         //write the push message to the apns socket connection
                         $wroteBytes = fwrite($fp, $msg);
+
                         if ($wroteBytes != strlen($msg)) {
                             $batchStatus = false;
                             file_put_contents($dbugFile, "========= retry batch ========\n", FILE_APPEND | LOCK_EX);
                             break;
                         }
+
+                        $this->checkAppleErrorResponse($fp);
                     }
                 }
+                usleep(500000);
+                $this->checkAppleErrorResponse($fp);
+
                 fclose($fp);
                 if ($batchStatus) {
                     break;
