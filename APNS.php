@@ -145,8 +145,9 @@ class APNS
             "\n\n\n\n================One push@$date=================\n", FILE_APPEND | LOCK_EX);
 
         $roundCounter = 0;
-        $roundSize = 30;
+        $roundSize = 50;
         $batchRetryTimes = 1;
+        $batchSleepTime = 60000000;//60 seconds
         for ($i = 0; $i < ceil($numOfDevices / $roundSize); $i++) {
             $devicesToPush = array();
             for ($k = 0; $k < $roundSize; $k++) {
@@ -199,7 +200,7 @@ class APNS
                 file_put_contents($dbugFile, "========= batch failed! ========\n", FILE_APPEND | LOCK_EX);
             }
             file_put_contents($dbugFile, "\n", FILE_APPEND | LOCK_EX);
-            usleep(1000000);
+            usleep(batchSleepTime);
         }
     }
 }
