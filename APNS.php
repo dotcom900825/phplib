@@ -200,7 +200,7 @@ class APNS
                 file_put_contents($dbugFile, "========= batch failed! ========\n", FILE_APPEND | LOCK_EX);
             }
             file_put_contents($dbugFile, "\n", FILE_APPEND | LOCK_EX);
-            usleep(batchSleepTime);
+            usleep($batchSleepTime);
         }
     }
 }
