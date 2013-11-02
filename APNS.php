@@ -36,10 +36,22 @@ class APNS
             FROM devices,passes,DeviceVSPass
             WHERE   DeviceVSPass.Device = devices.ID
             AND DeviceVSPass.Pass = passes.ID
-            AND passes.Card = ? ");
+            AND passes.Card = ?");
         $statement->execute(array($cardId));
-        $this->sendPushesToResultSet($statement);
-        return $statement->rowCount();
+        $count = $statement->rowCount();
+        $this->sendPushesToResultSet_ios($statement);
+
+        $passTypeId = DataInterface::getPassTypeIdByCardId($cardId);
+        $statement = $db->prepare("SELECT PushToken, devices.ID, devices.device_type
+            FROM devices,passes,DeviceVSPass
+            WHERE   DeviceVSPass.Device = devices.ID
+            AND DeviceVSPass.Pass = passes.ID
+            AND passes.Card = ?
+            AND devices.device_type != ?");
+        $statement->execute(array($cardId, 'ios'));
+        $this->sendPushesToResultSet_android($statement, $passTypeId);
+
+        return $count;
     }
 
     //update all registered devices
@@ -49,7 +61,7 @@ class APNS
         $db = Database::get();
         $statement = $db->prepare("SELECT PushToken FROM devices");
         $statement->execute();
-        $this->sendPushesToResultSet($statement);
+        $this->sendPushesToResultSet_ios($statement);
         return $statement->rowCount();
     }
 
@@ -61,7 +73,7 @@ class APNS
         $db = Database::get();
         $statement = $db->prepare("SELECT PushToken FROM devices WHERE PassID=?");
         $statement->execute(array($passId));
-        $this->sendPushesToResultSet($statement);
+        $this->sendPushesToResultSet_ios($statement);
     }
 
     // FUNCTION to check if there is an error response from Apple
@@ -130,8 +142,70 @@ class APNS
         }
     }
 
+    private function sendPushesToResultSet_android(PDOStatement $stmt, $passTypeId)
+    {
+        $numOfDevices = $stmt->rowCount();
+        $serviceUrl = "http://proxy.ravensoft.co.uk/PassWallet/v1/pushUpdate";
+        //check if there are any results
+        if ($numOfDevices == 0)
+            return;
+
+        $date = date('m/d/Y h:i:s a', time());
+        $dbugFile = dirname(__file__) . "/sent_devices.log";
+        file_put_contents($dbugFile,
+            "\n\n\n\n================One android push@$date=================\n", FILE_APPEND | LOCK_EX);
+
+        $roundCounter = 0;
+        $roundSize = 30;
+        $batchRetryTimes = 1;
+        $batchSleepTime = 30000000; //30 seconds
+        for ($i = 0; $i < ceil($numOfDevices / $roundSize); $i++) {
+            $devicesToPush = array();
+            for ($k = 0; $k < $roundSize; $k++) {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!$row) {
+                    break;
+                }
+                $devicesToPush[$k] = $row;
+            }
+
+            file_put_contents($dbugFile, "--------- Round $roundCounter:\n", FILE_APPEND | LOCK_EX);
+            $roundCounter++;
+
+            $result = "";
+            //send it to all devices found
+            for ($t = 0; $t < $batchRetryTimes; $t++) {
+                $phpArrayPayload = array();
+                $phpArrayPayload["passTypeID"] = $passTypeId;
+                $phpArrayPayload["pushTokens"] = array();
+                //create an empty push
+                foreach ($devicesToPush as $oneDevice) {
+                    array_push($phpArrayPayload["pushTokens"], $oneDevice['PushToken']);
+                    file_put_contents($dbugFile, $oneDevice['device_type'] . "\t" .
+                        $oneDevice['ID'] . " : " . $oneDevice['PushToken'] . "\n", FILE_APPEND | LOCK_EX);
+                }
+
+                $jsonPayload = json_encode($phpArrayPayload);
+
+                $ch = curl_init($serviceUrl);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonPayload);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($jsonPayload))
+                );
+
+                $result = curl_exec($ch);
+
+            }
+            file_put_contents($dbugFile, " $result\n", FILE_APPEND | LOCK_EX);
+            usleep($batchSleepTime);
+        }
+    }
+
     //send push notifications to all devices in the result set
-    private function sendPushesToResultSet(PDOStatement $stmt)
+    private function sendPushesToResultSet_ios(PDOStatement $stmt)
     {
         DebugLog::WriteLogWithFormat("APNS::sendPushesToResultSet((PDOStatement)stmt)");
         $numOfDevices = $stmt->rowCount();
@@ -142,12 +216,12 @@ class APNS
         $date = date('m/d/Y h:i:s a', time());
         $dbugFile = dirname(__file__) . "/sent_devices.log";
         file_put_contents($dbugFile,
-            "\n\n\n\n================One push@$date=================\n", FILE_APPEND | LOCK_EX);
+            "\n\n\n\n================One ios push@$date=================\n", FILE_APPEND | LOCK_EX);
 
         $roundCounter = 0;
         $roundSize = 50;
         $batchRetryTimes = 1;
-        $batchSleepTime = 60000000;//60 seconds
+        $batchSleepTime = 60000000; //60 seconds
         for ($i = 0; $i < ceil($numOfDevices / $roundSize); $i++) {
             $devicesToPush = array();
             for ($k = 0; $k < $roundSize; $k++) {

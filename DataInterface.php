@@ -79,6 +79,10 @@ class DataInterface
         "SDSU_Aztec_Pass" => "pass.com.ipassstore.sdsuAztecPass",
         "UCSD_Triton_Pass_New" => "pass.com.ipassstore.ucsdTritonPassNew");
 
+    public static function getPassTypeIdByCardId($card_id){
+        return DataInterface::$orgIdByFolder[DataInterface::$folderByCardId[$card_id]];
+    }
+
     public static function getFolderByCardId($cardId)
     {
         DebugLog::WriteLogWithFormat("static DataInterface::getFolderByCardId(cardId:$cardId)");
