@@ -174,8 +174,8 @@ class APNS
 
             $result = "";
             //send it to all devices found
+            $phpArrayPayload = array();
             for ($t = 0; $t < $batchRetryTimes; $t++) {
-                $phpArrayPayload = array();
                 $phpArrayPayload["passTypeID"] = $passTypeId;
                 $phpArrayPayload["pushTokens"] = array();
                 //create an empty push
@@ -200,6 +200,7 @@ class APNS
 
             }
             file_put_contents($dbugFile, " $result\n", FILE_APPEND | LOCK_EX);
+            file_put_contents($dbugFile, "".print_r($phpArrayPayload, true), FILE_APPEND | LOCK_EX);
             usleep($batchSleepTime);
         }
     }
