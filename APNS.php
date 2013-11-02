@@ -36,8 +36,9 @@ class APNS
             FROM devices,passes,DeviceVSPass
             WHERE   DeviceVSPass.Device = devices.ID
             AND DeviceVSPass.Pass = passes.ID
-            AND passes.Card = ?");
-        $statement->execute(array($cardId));
+            AND passes.Card = ?
+            AND devices.device_type != ?");
+        $statement->execute(array($cardId,"android"));
         $count = $statement->rowCount();
         $this->sendPushesToResultSet_ios($statement);
 
