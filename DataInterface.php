@@ -471,4 +471,13 @@ class DataInterface
         $row = $statement->fetch(PDO::FETCH_ASSOC);
         return $row['num'];
     }
+
+    public static function getOrgIdByUsername($username){
+        $db = Database::get();
+        $statement = $db->prepare("SELECT ID from organizations where UserName = ?");
+        $statement->execute(array($username));
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $org_id = $row['ID'];
+        return $org_id;
+    }
 }
