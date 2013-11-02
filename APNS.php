@@ -145,7 +145,7 @@ class APNS
     private function sendPushesToResultSet_android(PDOStatement $stmt, $passTypeId)
     {
         $numOfDevices = $stmt->rowCount();
-        $serviceUrl = "http://proxy.ravensoft.co.uk/PassWallet/v1/pushUpdate";
+        $serviceUrl = "http://proxy.ravensoft.co.uk/PassWallet/v1/pushUpdates";
         //check if there are any results
         if ($numOfDevices == 0)
             return;
