@@ -34,7 +34,9 @@ class DataInterface
         "pass.com.ipassstore.sdsuAztecPass:14" =>
         "/../../../Client/SDSU_Aztec_Pass/pass",
         "pass.com.ipassstore.ucsdTritonPassNew:15" =>
-        "/../../../Client/UCSD_Triton_Pass_New/pass");
+        "/../../../Client/UCSD_Triton_Pass_New/pass",
+        "pass.com.ipassstore.uclaBruinPass:16"=>
+        "/../../../Client/UCLA_Bruin_Pass/pass");
 
     static $folderByCardId = array(
         1 => "UCSD_CSSA_Membership_Card",
@@ -50,7 +52,8 @@ class DataInterface
         12 => "UM_CSSA_Membership_Card",
         13 => "UCSD_Triton_Pass",
         14 => "SDSU_Aztec_Pass",
-        15 => "UCSD_Triton_Pass_New");
+        15 => "UCSD_Triton_Pass_New",
+        16 => "UCLA_Bruin_Pass");
 
     static $cardKeyPasswordDict = array(
         "pass.com.ipassstore.ucsdcssa" => "ucsdcssa95536",
@@ -62,7 +65,8 @@ class DataInterface
         "pass.com.ipassstore.dev" => "iPassStoreDev95536",
         "pass.com.ipassstore.ucsdTritonPass" => "ucsdTritonPass95536",
         "pass.com.ipassstore.sdsuAztecPass" => "sdsuAztecPass95536",
-        "pass.com.ipassstore.ucsdTritonPassNew" => "ucsdTritonPassNew95536");
+        "pass.com.ipassstore.ucsdTritonPassNew" => "ucsdTritonPassNew95536",
+        "pass.com.ipassstore.uclaBruinPass" => "uclaBruinPass95536");
 
     static $orgIdByFolder = array(
         "TEST_NEW_SAMPLE" => "pass.com.ipassstore.dev",
@@ -77,7 +81,8 @@ class DataInterface
         "UM_CSSA_Membership_Card" => "pass.com.ipassstore.cssa",
         "UCSD_Triton_Pass" => "pass.com.ipassstore.ucsdTritonPass",
         "SDSU_Aztec_Pass" => "pass.com.ipassstore.sdsuAztecPass",
-        "UCSD_Triton_Pass_New" => "pass.com.ipassstore.ucsdTritonPassNew");
+        "UCSD_Triton_Pass_New" => "pass.com.ipassstore.ucsdTritonPassNew",
+        "UCLA_Bruin_Pass" => "pass.com.ipassstore.uclaBruinPass");
 
     public static function getPassTypeIdByCardId($card_id){
         return DataInterface::$orgIdByFolder[DataInterface::$folderByCardId[$card_id]];
